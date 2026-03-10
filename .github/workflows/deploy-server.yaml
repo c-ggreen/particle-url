@@ -28,6 +28,12 @@ jobs:
         run: |
           mvn clean package shade:shade
 
+      - name: OIDC debug
+        run: |
+          echo "OIDC token:"
+          curl -H "Authorization: Bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN" \
+              "$ACTIONS_ID_TOKEN_REQUEST_URL?aud=sts.amazonaws.com"
+
       # 4. Configure AWS credentials via OIDC
       - name: Configure AWS via OIDC
         uses: aws-actions/configure-aws-credentials@v3

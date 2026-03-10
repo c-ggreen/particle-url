@@ -32,6 +32,10 @@ jobs:
         run: |
           mvn clean package shade:shade
 
+      # Debug Maven build
+      - name: Show build artifacts
+        run: ls -R service/target
+
       # Debug OIDC
       - name: OIDC debug
         run: |
@@ -49,7 +53,9 @@ jobs:
       # Deploy fat JAR to Lambda
       - name: Deploy to AWS Lambda
         run: |
-          JAR_FILE=server/target/*-shaded.jar
+          JAR_FILE=$(ls server/target/*.jar | head -n 1)
+          echo "Deploying $JAR_FILE"
+
           aws lambda update-function-code \
             --function-name ${{ env.LAMBDA_FUNCTION_NAME }} \
             --zip-file fileb://$JAR_FILE

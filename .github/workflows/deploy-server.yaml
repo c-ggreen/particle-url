@@ -3,45 +3,50 @@ name: Deploy Java Lambda via OIDC
 on:
   workflow_dispatch
 
+permissions:
+  id-token: write
+  contents: read
+
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
     env:
-      AWS_REGION: us-east-1             # Change to your region
-      LAMBDA_FUNCTION_NAME: ${{ secrets.LAMBDA_FUNCTION_NAME }}  # Change to your Lambda function name
+      AWS_REGION: us-east-1
+      LAMBDA_FUNCTION_NAME: ${{ secrets.LAMBDA_FUNCTION_NAME }}
 
     steps:
-      # 1. Checkout repository
+      # Checkout repository
       - name: Checkout code
         uses: actions/checkout@v3
 
-      # 2. Set up Java 17
+      # Set up Java 17
       - name: Set up Java
         uses: actions/setup-java@v3
         with:
           java-version: '17'
           distribution: 'temurin'
 
-      # 3. Build fat JAR with Maven
+      # Build fat JAR with Maven
       - name: Build Fat JAR
         working-directory: server
         run: |
           mvn clean package shade:shade
 
+      # Debug OIDC
       - name: OIDC debug
         run: |
           echo "OIDC token:"
           curl -H "Authorization: Bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN" \
               "$ACTIONS_ID_TOKEN_REQUEST_URL?aud=sts.amazonaws.com"
 
-      # 4. Configure AWS credentials via OIDC
+      # Configure AWS credentials via OIDC
       - name: Configure AWS via OIDC
         uses: aws-actions/configure-aws-credentials@v3
         with:
           role-to-assume: ${{ secrets.AWS_OIDC_ROLE_ARN }}
           aws-region: ${{ env.AWS_REGION }}
 
-      # 5. Deploy fat JAR to Lambda
+      # Deploy fat JAR to Lambda
       - name: Deploy to AWS Lambda
         run: |
           JAR_FILE=server/target/*-shaded.jar

@@ -36,6 +36,9 @@ jobs:
       - name: Show build artifacts
         run: ls -R server/target
 
+      - name: Inspect built jar
+        run: jar tf server/target/*.jar | head
+
       # Debug OIDC
       - name: OIDC debug
         run: |

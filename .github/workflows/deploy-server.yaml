@@ -34,7 +34,7 @@ jobs:
 
       # Debug Maven build
       - name: Show build artifacts
-        run: ls -R service/target
+        run: ls -R server/target
 
       # Debug OIDC
       - name: OIDC debug

@@ -1,4 +1,4 @@
-name: Deploy Java Lambda 
+name: Deploy Java Lambda via OIDC
 
 on:
   push:
@@ -9,16 +9,16 @@ jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
     env:
-      AWS_REGION: us-east-1             # Change to your AWS region
-      LAMBDA_FUNCTION_NAME: particle-url-lambda  # Change to your Lambda function name
+      AWS_REGION: us-east-1             # Change to your region
+      LAMBDA_FUNCTION_NAME: ${{ secrets.LAMBDA_FUNCTION_NAME }}  # Change to your Lambda function name
 
     steps:
-      # 1. Checkout code
-      - name: Checkout repository
+      # 1. Checkout repository
+      - name: Checkout code
         uses: actions/checkout@v3
 
-      # 2. Set up Java
-      - name: Set up Java 17
+      # 2. Set up Java 17
+      - name: Set up Java
         uses: actions/setup-java@v3
         with:
           java-version: '17'
@@ -30,12 +30,11 @@ jobs:
         run: |
           mvn clean package shade:shade
 
-      # 4. Configure AWS credentials
-      - name: Configure AWS credentials
+      # 4. Configure AWS credentials via OIDC
+      - name: Configure AWS via OIDC
         uses: aws-actions/configure-aws-credentials@v2
         with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          role-to-assume: ${{ secrets.AWS_OIDC_ROLE_ARN }}
           aws-region: ${{ env.AWS_REGION }}
 
       # 5. Deploy fat JAR to Lambda
@@ -43,5 +42,5 @@ jobs:
         run: |
           JAR_FILE=server/target/*-shaded.jar
           aws lambda update-function-code \
-            --function-name $LAMBDA_FUNCTION_NAME \
+            --function-name ${{ env.LAMBDA_FUNCTION_NAME }} \
             --zip-file fileb://$JAR_FILE

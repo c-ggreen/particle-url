@@ -1,9 +1,7 @@
 name: Deploy Java Lambda via OIDC
 
 on:
-  push:
-    branches:
-      - main  # deploy only from main branch
+  workflow_dispatch
 
 jobs:
   build-and-deploy:

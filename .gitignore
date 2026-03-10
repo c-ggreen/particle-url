@@ -1,0 +1,126 @@
+#################################
+# OS Files
+#################################
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*.tmp
+
+#################################
+# Logs
+#################################
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+#################################
+# Environment / Secrets
+#################################
+.env
+.env.*
+*.env
+*.pem
+*.key
+*.crt
+*.p12
+*.pfx
+
+#################################
+# VS Code
+#################################
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+!.vscode/launch.json
+!.vscode/tasks.json
+
+#################################
+# Node / React
+#################################
+node_modules/
+dist/
+build/
+.next/
+out/
+coverage/
+
+*.tsbuildinfo
+
+#################################
+# Package Managers
+#################################
+.pnpm-store/
+.npm/
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions
+
+#################################
+# Java / Maven / Gradle
+#################################
+target/
+build/
+
+.gradle/
+gradle-app.setting
+!gradle-wrapper.jar
+
+*.class
+*.jar
+*.war
+*.ear
+
+#################################
+# IntelliJ / JetBrains
+#################################
+.idea/
+*.iml
+
+#################################
+# AWS / Cloud
+#################################
+
+# AWS SAM
+.aws-sam/
+
+# Serverless framework
+.serverless/
+
+# AWS CDK
+cdk.out/
+
+# Terraform
+.terraform/
+.terraform.lock.hcl
+*.tfstate
+*.tfstate.*
+crash.log
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+
+#################################
+# Docker
+#################################
+docker-compose.override.yml
+
+#################################
+# Testing
+#################################
+coverage/
+test-results/
+
+#################################
+# Misc
+#################################
+.cache/
+tmp/
+temp/

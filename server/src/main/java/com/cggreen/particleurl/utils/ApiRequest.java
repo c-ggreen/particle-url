@@ -8,11 +8,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 public class ApiRequest {
     private static final ObjectMapper objectMapper = new ObjectMapper();
 
-    public static UrlRequest getBody(APIGatewayProxyRequestEvent request) {
+    public static String getLongUrlFromBody(APIGatewayProxyRequestEvent request) {
         String body = request.getBody();
 
         try {
-            return objectMapper.readValue(body, UrlRequest.class);
+            return objectMapper.readValue(body, UrlRequest.class).getLongUrl();
         } catch (Exception e) {
             e.printStackTrace();
         }

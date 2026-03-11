@@ -23,8 +23,8 @@ public class UrlService {
                     .build();
 
             String shortUrl = NanoIdUtils.randomNanoId(7);
-            String longUrl = ApiRequest.getBody(request).get("longUrl");
-            
+            String longUrl = ApiRequest.getLongUrlFromBody(request);
+
             Map<String, AttributeValue> item = new HashMap<>();
             item.put("ShortUrl", AttributeValue.builder().s(shortUrl).build());
             item.put("LongUrl", AttributeValue.builder().s(longUrl).build());

@@ -1,0 +1,54 @@
+name: Manage DynamoDB Table
+on:
+  workflow_dispatch:
+    inputs:
+      action:
+        description: 'Choose whether to Create or Delete the table'
+        required: true
+        default: 'create'
+        type: choice
+        options:
+          - create
+          - delete
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  create-table:
+    if: ${{ github.event.inputs.action == 'create' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_OIDC_ROLE_ARN }}
+          aws-region: us-east-1
+
+      - name: Deploy CloudFormation Stack
+        uses: aws-actions/aws-cloudformation-github-deploy@v1
+        with:
+          name: ParticleUrlDynamoStack
+          template: dynamo/template.yaml
+          no-fail-on-empty-changeset: "1"
+
+  # --- JOB 2: DELETE TABLE ---
+  delete-table:
+    if: ${{ github.event.inputs.action == 'delete' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_OIDC_ROLE_ARN }}
+          aws-region: us-east-1
+
+      - name: Delete CloudFormation Stack
+        run: |
+          aws cloudformation delete-stack --stack-name ParticleUrlDynamoStack
+          echo "Waiting for stack deletion to complete..."
+          aws cloudformation wait stack-delete-complete --stack-name ParticleUrlDynamoStack

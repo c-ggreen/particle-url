@@ -35,13 +35,6 @@
             <version>2.34.0</version>
         </dependency>
 
-        <!-- DynamoDB enhanced client -->
-        <dependency>
-            <groupId>software.amazon.awssdk</groupId>
-            <artifactId>dynamodb-enhanced</artifactId>
-            <version>2.34.0</version>
-        </dependency>
-
         <!-- JSON -->
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
@@ -55,7 +48,20 @@
             <artifactId>slf4j-simple</artifactId>
             <version>2.0.17</version>
         </dependency>
+
+        <dependency>
+            <groupId>com.github.wosherco</groupId>
+            <artifactId>jnanoid-enhanced</artifactId>
+            <version>main-SNAPSHOT</version>
+        </dependency>
     </dependencies>
+
+    <repositories>
+        <repository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
+        </repository>
+    </repositories>
 
     <build>
         <plugins>

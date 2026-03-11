@@ -7,6 +7,9 @@ import com.amazonaws.services.lambda.runtime.RequestHandler;
 import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyRequestEvent;
 import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyResponseEvent;
 
+import com.cggreen.particleurl.service.UrlService;
+import com.cggreen.particleurl.utils.ApiRespone;
+
 public class Handler implements RequestHandler<APIGatewayProxyRequestEvent, APIGatewayProxyResponseEvent> {
     @Override
     public APIGatewayProxyResponseEvent handleRequest(
@@ -16,15 +19,11 @@ public class Handler implements RequestHandler<APIGatewayProxyRequestEvent, APIG
         String path = request.getPath();
 
         if (method.equals("GET") && path.equals("/")) {
-            return new APIGatewayProxyResponseEvent()
-                    .withStatusCode(200)
-                    .withHeaders(Map.of("Content-Type", "application/json"))
-                    .withBody("{\"message\":\"Success!\"}");
+            return ApiRespone.buildResponse(200, "{\"message\":\"Success!\"}");
+        } else if (method.equals("POST") && path.equals("/")) {
+            return UrlService.createShortUrl(request);
         }
+        return ApiRespone.buildResponse(404, "{\"message\":\"Not found.\"}");
 
-        return new APIGatewayProxyResponseEvent()
-                .withStatusCode(404)
-                .withHeaders(Map.of("Content-Type", "application/json"))
-                .withBody("{\"message\":\"Not found.\"}");
     }
 }

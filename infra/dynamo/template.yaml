@@ -9,13 +9,9 @@ Resources:
       AttributeDefinitions:
         - AttributeName: ShortUrl
           AttributeType: S
-        - AttributeName: LongUrl
-          AttributeType: S
       KeySchema:
         - AttributeName: ShortUrl
           KeyType: HASH  # Partition Key
-        - AttributeName: LongUrl
-          KeyType: RANGE # Sort Key
       BillingMode: PROVISIONED # Required for the free throughput units
       ProvisionedThroughput:
         ReadCapacityUnits: 5 # 25 CUs is the maximum per account per region

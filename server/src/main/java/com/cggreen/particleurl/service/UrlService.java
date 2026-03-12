@@ -3,6 +3,9 @@ package com.cggreen.particleurl.service;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyRequestEvent;
 import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyResponseEvent;
 import com.cggreen.particleurl.utils.ApiRequest;
@@ -17,10 +20,10 @@ import software.amazon.awssdk.services.dynamodb.model.PutItemRequest;
 import software.amazon.awssdk.regions.Region;
 
 public class UrlService {
+    private static final Logger logger = LoggerFactory.getLogger(UrlService.class);
 
     public static APIGatewayProxyResponseEvent getLongUrl(APIGatewayProxyRequestEvent request) {
         try {
-
             String shortUrl = ApiRequest.getShortUrlFromPath(request);
 
             DynamoDbClient dynamoDbClient = DynamoDbClient.builder()
@@ -44,6 +47,7 @@ public class UrlService {
 
             return ApiResponse.buildRedirect(longUrl);
         } catch (Exception e) {
+            logger.error("An error occured while attempting to redirect: {}}", e);
             return ApiResponse.buildResponse(500, "{\"message\":\"Fail!\"}");
         }
     }
@@ -71,6 +75,7 @@ public class UrlService {
 
             return ApiResponse.buildResponse(200, "{\"message\":\"Success!\"}");
         } catch (Exception e) {
+            logger.error("An error occured while attempting to create a short url: {}}", e);
             return ApiResponse.buildResponse(500, "{\"message\":\"Fail!\"}");
 
         }
